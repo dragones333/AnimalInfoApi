@@ -1,0 +1,35 @@
+# Build
+bin/
+obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# Logs
+*.log
+
+# Environment variables
+.env
+
+# Visual Studio settings
+.vscode/
+*.dbmdl
+
+# Temporary files
+*.tmp
+*.temp
+
+# Publish outputs
+publish/
+
+# JetBrains Rider
+.idea/
+
+# SQLite database (opcional)
+*.db
+*.sqlite
+
+.env

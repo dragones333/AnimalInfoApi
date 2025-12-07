@@ -1,6 +1,7 @@
-namespace AnimalInfoApi.Services;
-
-public class IIAService
+namespace AnimalInfoApi.Services
 {
-    
+    public interface IIAService
+    {
+        Task<string> GenerarDescripcion(string animal);
+    }
 }

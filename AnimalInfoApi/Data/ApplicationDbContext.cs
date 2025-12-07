@@ -1,6 +1,15 @@
-namespace AnimalInfoApi.Data;
+using Microsoft.EntityFrameworkCore;
+using AnimalInfoApi.Models;
 
-public class ApplicationDbContext
+namespace AnimalInfoApi.Data
 {
-    
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<Animal> Animales { get; set; }
+    }
 }
