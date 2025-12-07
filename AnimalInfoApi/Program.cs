@@ -34,7 +34,6 @@ app.UseSwaggerUI();
 
 app.UseCors("AllowAll");
 
-
 app.UseRouting();
 
 app.MapControllers();
