@@ -3,26 +3,26 @@ using AnimalInfoApi.Data;
 using AnimalInfoApi.Services;
 using AnimalInfoApi.Models;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Cargar el archivo .env manualmente
+Env.Load(); 
 
 // Variables de entorno
 builder.Configuration.AddEnvironmentVariables();
 
-// Configurar CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
+// CORS
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAll", policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
 
+// Leer cadena de conexión
 var connectionString = builder.Configuration["DB_CONNECTION"];
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString)); 
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<IIAService, IAService>();
 
@@ -36,39 +36,13 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseCors("AllowAll");
 
-app.UseRouting();
 app.MapControllers();
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Urls.Add($"http://*:{port}");
 
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.EnsureCreated();
-
-    if (!db.Animales.Any())
-    {
-        db.Animales.AddRange(
-            new Animal
-            {
-                Nombre = "León",
-                Especie = "Panthera leo",
-                Habitat = "Sabana",
-                Descripcion = "Gran felino carnívoro, conocido como 'el rey de la selva'.",
-                ImagenUrl = "https://example.com/leon.jpg"
-            },
-            new Animal
-            {
-                Nombre = "Tortuga Marina",
-                Especie = "Chelonia mydas",
-                Habitat = "Océanos tropicales",
-                Descripcion = "Tortuga marina herbívora que migra largas distancias.",
-                ImagenUrl = "https://example.com/tortuga.jpg"
-            }
-        );
-        db.SaveChanges();
-    }
+    db.Database.Migrate();
 }
 
 app.Run();
